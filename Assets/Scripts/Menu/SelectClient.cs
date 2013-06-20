@@ -7,19 +7,29 @@ public class SelectClient : MonoBehaviour {
 	public string targetIP = "127.0.0.1";
 	
 	private ClientGUI _cgui;
+	private Color _initialColor;
+	private Color WHITE = new Color(1.0f, 1.0f, 1.0f, 1.0f);
 	
 	void Start()
 	{
 		_cgui = gameObject.GetComponent<ClientGUI>();
 		_cgui.enabled = false;
+		
+		_initialColor = renderer.material.color;
 	}
 
 	void OnMouseOver()
 	{
+		renderer.material.color = WHITE;
 		if (Input.GetMouseButtonDown(0))
 		{
 			_cgui.enabled = true;
 		}
+	}
+	
+	void OnMouseExit()
+	{
+		renderer.material.color = _initialColor;
 	}
 	
 	void Update()

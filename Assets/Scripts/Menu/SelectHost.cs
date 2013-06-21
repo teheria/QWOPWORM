@@ -22,6 +22,7 @@ public class SelectHost : MonoBehaviour {
 		renderer.material.color = WHITE;
 		if (Input.GetMouseButtonDown(0))
 		{
+			useNat = !Network.HavePublicAddress();
 			Network.InitializeServer(1, connectPort, useNat);
 			_titleNetworkView.RPC("ServerReady", RPCMode.AllBuffered);
 		}

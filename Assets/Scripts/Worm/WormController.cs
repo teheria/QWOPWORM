@@ -46,7 +46,13 @@ public class WormController : MonoBehaviour {
 	}
 	
 	void Update() {		
-		
+		if ((PlayerManager.host == PlayerManager.PlayingAs.WORM && Network.isServer) ||
+			(PlayerManager.client == PlayerManager.PlayingAs.WORM && !Network.isServer)) {
+			CheckForMovement();
+		}
+	}
+	
+	void CheckForMovement() {
 		if (Input.GetButtonDown(_currentKey)) {
 			_animation.Play(_inputAnimationKeys[_currentKey]);
 			_animation[_inputAnimationKeys[_currentKey]].speed = _speed;
@@ -61,6 +67,7 @@ public class WormController : MonoBehaviour {
 			_transform.position -= (_transform.forward * _distance);
 		}
 	}
+	
 	
 	private void GetNextAnimationKey() {
 		

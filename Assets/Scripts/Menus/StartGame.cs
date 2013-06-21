@@ -3,17 +3,17 @@ using System.Collections;
 
 public class StartGame : MonoBehaviour {
 	
-	private bool _clientReady = false, _serverReady = false;
+	private bool _clientReady = false, _serverReady = false, _loaded = false;
 	
 	// Use this for initialization
 	void Start () {
-	
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (_clientReady && _serverReady)
+		if (_clientReady && _serverReady && !_loaded)
 		{
+			_loaded = true;
 			networkView.RPC("LoadGame", RPCMode.All);
 		}
 	}

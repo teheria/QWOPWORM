@@ -11,6 +11,10 @@ using System.Collections.Generic;
  *********************************************************************/
 public class WormController : MonoBehaviour {
 	
+	// make true to test without server
+	public bool noServerDebug = false;
+	
+	// cache objects
 	private Transform _transform;
 	private Animation _animation;
 	private AnimationClip _fullAnimation;
@@ -37,15 +41,21 @@ public class WormController : MonoBehaviour {
 	}
 	
 	void Start() {
+		// break up clip for each input key
 		_animation.AddClip(_fullAnimation, "moveW", -1, 15, false);
 		_animation.AddClip(_fullAnimation, "moveO", 15, 30, false);
 		_animation.AddClip(_fullAnimation, "moveR", 30, 45, false);
 		_animation.AddClip(_fullAnimation, "moveM", 45, 59, false);
 		_animation.AddClip(_fullAnimation, "reset", 0, 0, false);
-		
 	}
 	
 	void Update() {		
+		
+		if (noServerDebug) {
+			CheckForMovement();
+			return;
+		}
+		
 		if ((PlayerManager.host == PlayerManager.PlayingAs.WORM && Network.isServer) ||
 			(PlayerManager.client == PlayerManager.PlayingAs.WORM && !Network.isServer)) {
 			CheckForMovement();
@@ -65,13 +75,16 @@ public class WormController : MonoBehaviour {
 			gameObject.SampleAnimation(_fullAnimation, 0);
 			_currentKey = "WormW";
 			_transform.position -= (_transform.forward * _distance);
+			// lose some score
+			ScoreManager.Instance.WormScore -= 5;
 		}
-	}
-	
+	}	
 	
 	private void GetNextAnimationKey() {
 		
 		if (_index > 3) {
+			// on the final key press give the worm player points
+			ScoreManager.Instance.WormScore += 10;
 			_index = 0;
 		}
 		
